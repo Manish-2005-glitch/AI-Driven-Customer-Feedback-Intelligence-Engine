@@ -1,0 +1,12 @@
+import re
+from langchain_core.runnables import RunnableLambda
+
+def clean_text(text:str) -> str:
+    text = text.lower()
+    text = re.sub(r"https\S+", "", text)
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
+    text = re.sub(r"\s+", "", text).strip()
+    return text
+
+def get_preprocessor():
+    return RunnableLambda(lambda x: clean_text(x))

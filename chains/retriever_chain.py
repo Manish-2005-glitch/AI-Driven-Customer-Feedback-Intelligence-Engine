@@ -1,0 +1,13 @@
+from langchain_community.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
+
+def get_retriever():
+    
+    embeddings = HuggingFaceEndpointEmbeddings(
+        model="sentence-transformers/all-MiniLM-L6-v2",
+        task="feature-extraction"
+    )
+    
+    db = FAISS.load_local("vectorstore" , embeddings)
+    
+    return db.as_retriever(search_type = "mmr", search_kwargs = {"k":5})

@@ -1,0 +1,14 @@
+langchain
+langchain-community
+langchain-core
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+google-play-scraper
+fastapi
+uvicorn
+streamlit
+pandas
+numpy
+torch
+python-dotenv
