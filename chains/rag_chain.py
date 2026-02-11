@@ -29,7 +29,7 @@ def get_rag_chain(retriever):
     
     llm = huggingface_hub(
         repo_id="google/flan-t5-large",
-        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
+        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_ACCESS_TOKEN"),
         model_kwargs={"temperature": 0.2}
     )
     

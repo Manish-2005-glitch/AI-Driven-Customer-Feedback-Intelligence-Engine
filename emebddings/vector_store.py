@@ -21,7 +21,8 @@ def build_store():
     
     embeddings = HuggingFaceEndpointEmbeddings(
         model="sentence-transformers/all-MiniLM-L6-v2",
-        task="feature-extraction"
+        task="feature-extraction",
+        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_ACCESS_TOKEN")
     )
     
     db = FAISS.from_documents(docs, embeddings)
