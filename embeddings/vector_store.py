@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def build_store():
-    df =pd.read_csv("review.csv")
+    df =pd.read_csv("data/review.csv")
     
     docs = [
         Document(

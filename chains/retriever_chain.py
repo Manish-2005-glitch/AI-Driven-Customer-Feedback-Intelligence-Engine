@@ -10,6 +10,11 @@ def get_retriever():
         huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_ACCESS_TOKEN")
     )
     
-    db = FAISS.load_local("vectorstore" , embeddings)
+    db = FAISS.load_local(
+    "vectorstore",
+    embeddings,
+    allow_dangerous_deserialization=True
+    )
+
     
     return db.as_retriever(search_type = "mmr", search_kwargs = {"k":5})

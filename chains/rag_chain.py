@@ -1,42 +1,45 @@
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_community.llms import huggingface_hub
-import os
+from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 def get_rag_chain(retriever):
-    
-    prompt = PromptTemplate.from_template(
-        """"
-        You are a product analyst.
 
-        Context:
-        {context}
+    prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         """You are a product analyst.
+         Use the provided context to answer the question.
 
-        Question:
-        {question}
+         Provide:
+         - Clear Answer
+         - Key Insights
+         - Actionable Recommendations
+         """),
+        ("human",
+         "Context:\n{context}\n\nQuestion:\n{question}")
+    ])
 
-        Provide:
-        - Clear Answer
-        - Key Insights
-        - Actionable Recommendations
-        
-        """
+    base_llm = HuggingFaceEndpoint(
+        repo_id="deepseek-ai/DeepSeek-V3.2",
+        huggingfacehub_api_token = os.getenv("HUGGINGFACEHUB_ACCESS_TOKEN")
     )
-    
-    llm = huggingface_hub(
-        repo_id="google/flan-t5-large",
-        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_ACCESS_TOKEN"),
-        model_kwargs={"temperature": 0.2}
-    )
-    
+
+    llm = ChatHuggingFace(llm=base_llm)
+
     output_parser = StrOutputParser()
-    
+
     chain = (
-        {"context": retriever, "question": RunnablePassthrough()} | prompt | llm | output_parser
+        {
+            "context": retriever,
+            "question": RunnablePassthrough()
+        }
+        | prompt
+        | llm
+        | output_parser
     )
-    
+
     return chain
